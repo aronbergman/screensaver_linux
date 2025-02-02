@@ -24,8 +24,8 @@ This Python program creates a screensaver that locks the screen and prevents the
 ## Usage
 1. Clone the repository:
    ```
-   git clone https://github.com/aronbergman/screensaver_42.git
-   cd screensaver_42
+   git clone https://github.com/aronbergman/screensaver_linux.git
+   cd screensaver_linux
    ```
 2. Run the program:
    ```
