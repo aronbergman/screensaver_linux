@@ -4,6 +4,10 @@ import subprocess  # Import subprocess module to execute system commands
 import random  # Import random module to generate random numbers
 import signal  # Import signal module to handle signals
 import tkinter as tk  # Import tkinter module for creating GUI applications
+from datetime import datetime, timedelta  # Import for time tracking
+
+start_time = datetime.now()  # Track when the script starts
+max_runtime = timedelta(hours=4)  # Set maximum runtime to 4 hours
 
 def handle_ctrl_h(signum, frame):
     # Handle Ctrl+H signal (SIGQUIT)
@@ -22,6 +26,15 @@ def handle_home(event):
     print("\nHome")
     return "break"
 
+def check_runtime():
+    # Check if runtime exceeds 3 hours
+    if datetime.now() - start_time > max_runtime:
+        print("\nAuto-logout after 3 hours...")
+        subprocess.run(["gnome-session-quit", "--force"])  # Force logout in Ubuntu 22
+        root.quit()
+        sys.exit(0)
+    root.after(60000, check_runtime)  # Check every minute
+
 # Register Ctrl+H signal handler
 signal.signal(signal.SIGQUIT, handle_ctrl_h)
 
@@ -39,8 +52,6 @@ root = tk.Tk()
 root.attributes('-fullscreen', True)  # Set window to fullscreen mode
 root.config(cursor="none")  # Hide cursor
 text = ""
-#text = "System Update in Progress. Please do not power off this machine\n\nLinux PAUL-f3Ar4s3 5.15.0-130-generic #140-Ubuntu SMP Wed Dec 18 17:59:53 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux"
-#text = "Locked by abergman: a few minuts ago...\n\n\n\n░▒▓█▓▒░░▒▓█▓▒░▒▓███████▓▒░       ░▒▓███████▓▒░ ░▒▓███�[...]
 
 label = tk.Label(root, text=text, font=('mono', 10), fg='#909090', bg='black')  # Create label with custom text and styling
 label.pack(expand=True, fill='both')  # Pack label to fill the window
@@ -79,6 +90,7 @@ cursor_thread.daemon = True  # Set thread as daemon
 cursor_thread.start()  # Start the thread
 
 prevent_sleep()  # Call prevent_sleep function
+check_runtime()  # Start runtime checking
 
 # Bind Ctrl+H to close and disable Home key
 root.bind('<Key>', close_on_ctrl_h)
