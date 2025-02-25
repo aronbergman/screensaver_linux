@@ -17,6 +17,9 @@ def handle_ctrl_h(signum, frame):
 
 def close_on_ctrl_h(event):
     # Close application when Ctrl+H is pressed
+    # print(f"Event state: {event.state}")
+    # print(f"Event keysym: {event.keysym}")
+    # print(f"Event keysym_num: {event.keysym_num}")
     if event.keysym == 'h' and event.state & 0x4:
         root.quit()
         sys.exit(0)
